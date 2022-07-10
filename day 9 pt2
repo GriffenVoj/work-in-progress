@@ -1,0 +1,53 @@
+test=open("test.txt").read().splitlines()
+data=open("data.txt").read().splitlines()
+
+#constants 
+checked=[]
+
+#find neighboring cells, add them to list if their value isnt nine (edge)
+def edges(i,j,grid):
+    neighbors=[]
+    #right
+    if i+1<len(grid[0]):
+        neighbors.append((j,i+1))
+    #left
+    if i-1>=0:
+        neighbors.append((j,i-1))
+    #up
+    if j+1<len(grid):
+        neighbors.append((j+1,i))
+    #down
+    if j-1>=0:
+        neighbors.append((j-1,i))  
+    #top right
+    if i+1<len(grid[0]) and j+1<len(grid):
+        neighbors.append((j+1,i+1))
+    #top left
+    if i-1>=0 and j+1<len(grid):
+        neighbors.append((j+1,i-1))
+    #bot right
+    if i+1<len(grid[0]) and i+1<len(grid[0]):
+        neighbors.append((j-1,i+1))  
+    #bot left
+    if i-1>=0 and i+1<len(grid[0]):
+        neighbors.append((j-1,i-1))
+    filter_neighbor=[]
+    for item in neighbors:
+        if int(grid[item[0]][item[1]])!=9:
+            filter_neighbor.append(item)
+    return filter_neighbor
+
+
+#recursively check every item in basin
+def basin_finder(x,y,grid,basin):
+    neighbors=edges(x,y,grid)
+    checked.append((x,y))
+    basin.append((x,y))
+    for item in neighbors:
+        if not item in checked:
+            return basin_finder(item[1],item[0],grid,basin)
+    
+    return basin
+
+z=[]
+print(basin_finder(0,0,test,z))
